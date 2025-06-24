@@ -1,7 +1,8 @@
 """Configuration settings for the application"""
-import os
 import json
+import os
 from typing import Optional, List, Dict
+
 
 class Settings:
     def __init__(self):
@@ -18,7 +19,7 @@ class Settings:
 
     def _load_models(self) -> List[str]:
         """Load supported model list"""
-        models_json = os.getenv("MODELS", '["deepseek-chat"]')
+        models_json = os.getenv("SUPPORTED_MODELS", "[]")
         try:
             return json.loads(models_json)
         except json.JSONDecodeError:
@@ -31,5 +32,6 @@ class Settings:
     def is_model_supported(self, model: str) -> bool:
         """Check if model is supported"""
         return model in self.models
+
 
 settings = Settings()

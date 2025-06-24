@@ -1,5 +1,5 @@
 from .request import ChatRequest, Parameters, UserInfo
-from .response import ChatResponse, ChatResponseData, ModelInfo, Usage, ErrorResponse
+from .response import ChatResponse, ChatResponseData, Model, Usage, ErrorResponse
 
 __all__ = [
     "ChatRequest",
@@ -7,7 +7,7 @@ __all__ = [
     "UserInfo",
     "ChatResponse",
     "ChatResponseData",
-    "ModelInfo",
+    "Model",
     "Usage",
     "ErrorResponse"
 ]

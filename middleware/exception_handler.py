@@ -1,18 +1,21 @@
 """Exception handling middleware"""
+import logging
+
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
-from app.core.exceptions import UniAIException
-from app.utils.time_utils import get_current_timestamp
-import logging
+
+from core.exceptions import UniAIException
+from utils.time_utils import get_current_timestamp
 
 logger = logging.getLogger(__name__)
 
+
 async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Unified exception handler"""
-    
+
     # Get request ID (if exists)
     request_id = getattr(request.state, 'request_id', 'unknown')
-    
+
     if isinstance(exc, UniAIException):
         # Custom exception
         logger.warning(f"UniAI Exception: {exc.message}")
@@ -25,7 +28,7 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
                 "timestamp": get_current_timestamp()
             }
         )
-    
+
     elif isinstance(exc, HTTPException):
         # FastAPI HTTP exception
         logger.warning(f"HTTP Exception: {exc.detail}")
@@ -38,7 +41,7 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
                 "timestamp": get_current_timestamp()
             }
         )
-    
+
     else:
         # Unknown exception
         logger.error(f"Unexpected error: {str(exc)}", exc_info=True)

@@ -1,8 +1,8 @@
-from app.providers.deepseek import get_deepseek_response
-from app.models.response import ChatResponse, ChatResponseData, ModelInfo, Usage, ErrorResponse
-from app.core.config import settings
-from app.core.exceptions import ModelNotSupportedException, ProviderException
-from app.utils.time_utils import get_current_timestamp
+from models.response import ChatResponse, ChatResponseData, Model, Usage
+from core.config import settings
+from core.exceptions import ModelNotSupportedException, ProviderException
+from utils.time_utils import get_current_timestamp
+from providers.deepseek import get_deepseek_response
 
 class ChatService:
     @staticmethod
@@ -25,7 +25,7 @@ class ChatService:
                 
                 response_data = ChatResponseData(
                     result=response_obj.content,
-                    model_info=ModelInfo(
+                    model=Model(
                         name=request.model,
                         provider="deepseek",
                         version=response_obj.response_metadata.get('model_name', 'unknown')

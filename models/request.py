@@ -1,6 +1,9 @@
-from pydantic import BaseModel, field_validator
 from typing import Optional
-from app.core.config import settings
+
+from pydantic import BaseModel, field_validator
+
+from core.config import settings
+
 
 class Parameters(BaseModel):
     prompt: str
@@ -14,7 +17,7 @@ class Parameters(BaseModel):
         if v < 0.0 or v > 2.0:
             raise ValueError("Temperature must be between 0.0 and 2.0")
         return v
-    
+
     @field_validator('max_tokens')
     @classmethod
     def validate_max_tokens(cls, v):
@@ -29,9 +32,11 @@ class Parameters(BaseModel):
             raise ValueError(f"Scene '{v}' not found")
         return v
 
+
 class UserInfo(BaseModel):
     user_id: str
     user_role: str
+
 
 class ChatRequest(BaseModel):
     model: str
@@ -40,8 +45,7 @@ class ChatRequest(BaseModel):
     request_id: str
 
     @field_validator('model')
-    @classmethod
-    def validate_model(cls, v):
+    def validate_model(v):
         if hasattr(settings, 'models') and v not in settings.models:
             raise ValueError(f"Model '{v}' not found")
         return v

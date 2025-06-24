@@ -1,14 +1,11 @@
 import os
 import uvicorn
-from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.v1 import chat
 from core.exceptions import UniAIException
 from middleware import exception_handler
-
-load_dotenv()
 
 app = FastAPI(
     title="UniAI",

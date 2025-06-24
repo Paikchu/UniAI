@@ -1,6 +1,9 @@
 """Configuration settings for the application"""
 import json
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 from typing import Optional, List, Dict
 
 

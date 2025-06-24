@@ -3,7 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from api.v1 import chat
+from api.v1 import chat, unified_schedule
 from core.exceptions import UniAIException
 from middleware import exception_handler
 
@@ -28,6 +28,7 @@ app.add_exception_handler(Exception, exception_handler)
 
 # Include routers
 app.include_router(chat.router, prefix="/api/v1")
+app.include_router(unified_schedule.router, prefix="/api/v1")
 
 
 @app.get("/")
@@ -40,5 +41,5 @@ def health_check():
     return {"status": "healthy", "version": "1.0.0"}
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))
+    port = int(os.getenv("PORT"))
     uvicorn.run(app, host="0.0.0.0", port=port)

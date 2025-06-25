@@ -1,3 +1,4 @@
+import logging
 import os
 from typing import Optional, Dict, Any, Type
 
@@ -22,6 +23,20 @@ class DeepSeekResponse:
         self.response_metadata = response_metadata or {}
 
 
+def _create_prompt_template(system_prompt: Optional[str] = None) -> ChatPromptTemplate:
+    """Create chat prompt template using langchain prompt builders"""
+    messages = []
+
+    if system_prompt:
+        system_template = SystemMessagePromptTemplate.from_template(system_prompt)
+        messages.append(system_template)
+
+    human_template = HumanMessagePromptTemplate.from_template("{user_input}")
+    messages.append(human_template)
+
+    return ChatPromptTemplate.from_messages(messages)
+
+
 class DeepSeekProvider:
     """DeepSeek provider using langchain prompt templates"""
 
@@ -30,7 +45,7 @@ class DeepSeekProvider:
         if not self.api_key:
             raise ProviderException("deepseek", "DeepSeek API key not found")
 
-    def _create_chat_model(self, temperature: float = 0.7, max_tokens: int = 100) -> ChatDeepSeek:
+    def _create_chat_model(self, temperature: float = 0, max_tokens: int = None) -> ChatDeepSeek:
         """Create and configure ChatDeepSeek model"""
         return ChatDeepSeek(
             api_key=self.api_key,
@@ -38,19 +53,6 @@ class DeepSeekProvider:
             temperature=temperature,
             max_tokens=max_tokens,
         )
-
-    def _create_prompt_template(self, system_prompt: Optional[str] = None) -> ChatPromptTemplate:
-        """Create chat prompt template using langchain prompt builders"""
-        messages = []
-
-        if system_prompt:
-            system_template = SystemMessagePromptTemplate.from_template(system_prompt)
-            messages.append(system_template)
-
-        human_template = HumanMessagePromptTemplate.from_template("{user_input}")
-        messages.append(human_template)
-
-        return ChatPromptTemplate.from_messages(messages)
 
     def get_response(
             self,
@@ -66,7 +68,7 @@ class DeepSeekProvider:
             chat_model = self._create_chat_model(temperature, max_tokens)
 
             # Create prompt template
-            prompt_template = self._create_prompt_template(system_prompt)
+            prompt_template = _create_prompt_template(system_prompt)
 
             # Create output parser
             output_parser = StrOutputParser()

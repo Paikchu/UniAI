@@ -61,13 +61,6 @@
 ```json
 {
     "prompt": "我明天需要复习算法基础2小时，刷LeetCode 1.5小时，还要做项目开发3小时，健身1小时。请帮我安排一个高效的日程。",
-    "user_preferences": {
-        "preferred_study_time": "morning",
-        "preferred_work_time": "afternoon"
-    },
-    "constraints": {
-        "max_continuous_work": 120
-    },
     "request_id": "example_001"
 }
 ```
@@ -98,15 +91,6 @@
             "end_date": "2025-01-16T15:30:00"
         }
     ],
-    "total_events": 2,
-    "estimated_total_time": 210,
-    "user_preferences": {
-        "preferred_study_time": "morning",
-        "preferred_work_time": "afternoon"
-    },
-    "constraints": {
-        "max_continuous_work": 120
-    },
     "request_id": "example_001"
 }
 ```

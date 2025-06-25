@@ -1,5 +1,5 @@
 import os
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Type
 
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ load_dotenv()
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_deepseek.chat_models import ChatDeepSeek
+from pydantic import BaseModel
 
 from core.exceptions import ProviderException
 
@@ -134,6 +135,36 @@ class DeepSeekProvider:
 
         except Exception as e:
             raise ProviderException("deepseek", f"Error calling DeepSeek API: {str(e)}")
+
+    def get_structured_response(
+            self,
+            template: str,
+            input_variables: Dict[str, Any],
+            response_schema: Type[BaseModel],
+            temperature: float = 0.7,
+            max_tokens: int = None
+    ) -> BaseModel:
+        """Get structured response using LangChain's with_structured_output"""
+        try:
+            # Create chat model
+            chat_model = self._create_chat_model(temperature, max_tokens)
+
+            # Use LangChain's structured output functionality
+            model_with_structure = chat_model.with_structured_output(response_schema)
+
+            # Create custom prompt template
+            prompt_template = ChatPromptTemplate.from_template(template)
+
+            # Create chain with structured output
+            chain = prompt_template | model_with_structure
+
+            # Execute chain with input variables and get structured response
+            structured_result = chain.invoke(input_variables)
+
+            return structured_result
+
+        except Exception as e:
+            raise ProviderException("deepseek", f"Error calling DeepSeek API with structured output: {str(e)}")
 
 
 # Backward compatibility function

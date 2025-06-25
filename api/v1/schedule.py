@@ -6,12 +6,11 @@ router = APIRouter()
 
 
 @router.post(
-    "/schedule/optimize",
+    "/schedule/plan",
     tags=["Schedule"],
-    summary="Schedule Optimization",
-    description="Optimize schedule using AI to improve efficiency and resolve conflicts.",
+    summary="Schedule Planning",
+    description="Generate optimized schedule based on user's text prompt.",
     response_model=ScheduleResponse,
 )
-def optimize_schedule(request: ScheduleRequest):
-    """Schedule optimization endpoint"""
+def schedule_planning(request: ScheduleRequest) -> ScheduleResponse:
     return ScheduleService.process_schedule_request(request)

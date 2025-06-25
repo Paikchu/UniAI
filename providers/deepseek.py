@@ -1,6 +1,11 @@
 import os
 from typing import Optional, Dict, Any
 
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+load_dotenv()
+
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 from langchain_deepseek.chat_models import ChatDeepSeek
@@ -27,6 +32,7 @@ class DeepSeekProvider:
     def _create_chat_model(self, temperature: float = 0.7, max_tokens: int = 100) -> ChatDeepSeek:
         """Create and configure ChatDeepSeek model"""
         return ChatDeepSeek(
+            api_key=self.api_key,
             model="deepseek-chat",
             temperature=temperature,
             max_tokens=max_tokens,
